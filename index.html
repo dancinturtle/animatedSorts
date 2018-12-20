@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="anime-master/anime.min.js"></script>
+    <style>
+        #JSarray {
+            position: absolute;
+            bottom: 0px;
+        }
+
+        .line {
+            padding: 10px;
+            display: inline-block;
+        }
+
+        .square {
+            background-color: rgb(116, 237, 132);
+            height: 50px;
+            width: 50px;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <div id="JSarray">
+        <div class="line">
+            <div class="square el-01"></div>
+        </div>
+        <div class="line">
+            <div class="square el-02"></div>
+        </div>
+        <div class="line">
+            <div class="square el-03"></div>
+        </div>
+        <div class="line">
+            <div class="square el-03"></div>
+        </div>
+        <div class="line">
+            <div class="square el-03"></div>
+        </div>
+    </div>
+
+    <script>
+        var el = document.querySelectorAll('#JSarray .square');
+        for(var x = 0; x<el.length; x++){
+            console.log("x positions", el[x].getBoundingClientRect().x);
+        }
+        var arr = [];
+        var nums = [5, 4, 3, 2, 1];
+        for (var i = 0; i < el.length; i++) {
+            arr.push({ dom: el[i], val: nums[i], count: 0 })
+        }
+
+        // var singleEl = { val: 3, name: "el-00" }
+        for (var i = 0; i < nums.length; i++) {
+            var height = nums[i];
+            anime({
+                targets: el[i],
+                height: {
+                    value: "*=" + height,
+                    duration: 2000,
+                    easing: "linear"
+                },
+                loop: false,
+                duration: 3000
+            })
+        }
+        var time = anime.timeline();
+
+        function bubbleSort(arr) {
+            var results = [];
+            for (var j = 1; j < arr.length; j++) {
+
+                var aSwapOccurred = false;
+                for (var i = 0; i < arr.length - j; i++) {
+                    var swapped = false;
+                    time.add({
+                            targets: [arr[i].dom, arr[i + 1].dom],
+                            backgroundColor: [
+                                // { value: '#FFF' }, // Or #FFFFFF
+                                { value: 'rgb(0, 0, 255)' },
+                                { value: 'rgb(116, 237, 132)' }
+                            ]
+                        })
+                    if (arr[i].val > arr[i + 1].val) {
+                        time.add({
+                            targets: [arr[i].dom, arr[i + 1].dom],
+                            backgroundColor: [
+                                // { value: '#FFF' }, // Or #FFFFFF
+                                { value: 'rgb(255, 0, 0)' },
+                                { value: 'rgb(116, 237, 132)' }
+                            ]
+                        })
+                        arr[i].count += 1;
+                        arr[i+1].count -= 1;
+                        time
+                        .add({
+                            targets: arr[i].dom,
+                            translateX: 74 * arr[i].count
+                        })
+                        .add({
+                            targets: arr[i+1].dom,
+                            translateX: 74 * arr[i+1].count
+                        })
+        
+                        swapped = true;
+                        aSwapOccurred = true;
+                        var temp = arr[i];
+                        arr[i] = arr[i + 1];
+                        arr[i + 1] = temp;
+
+                        // var x1 = arr[i].dom.getBoundingClientRect().x;
+                        // var x2 = arr[i+1].dom.getBoundingClientRect().x;
+                        console.log("swapping index", i, arr[i].val, "with index", i+1, arr[i+1]);
+              
+                        // .add({
+                        //     targets: arr[i+1].dom,
+                        //     translateX: -74
+                        // })
+                        // for(var key in arr[i].dom){
+                        //     console.log("the key", key);
+                        // }
+
+                    }
+
+                    // results.push({"left": i, "swapped": swapped, "fastExit": false})
+                }
+                // if (aSwapOccurred == false) {
+                //     console.log(time)
+
+                //     results.push({ "left": i, "swapped": swapped, "fastExit": true })
+                //     return results
+                // }
+            }
+            
+            return results
+        }
+
+        var bubbleData = bubbleSort(arr);
+        console.log("sorted", arr);
+        console.log(bubbleData);
+
+
+        function animateBubbleData(arr) {
+            var delay = 500
+            for (var i = 0; i < arr.length - 1; i++) {
+                time
+                    .add({
+                        targets: el[arr[i].left],
+                        backgroundColor: [{ value: '#FFF' }],
+                        // delay: delay
+                    })
+                // anime({
+                //     targets: el[arr[i].left],
+                //     backgroundColor: [{value: '#FFF'}],
+                //     delay: delay
+                // })
+                // delay += 500
+            }
+        }
+
+
+        // animateBubbleData(bubbleData);
+
+
+
+
+
+    </script>
+</body>
+
+</html>
