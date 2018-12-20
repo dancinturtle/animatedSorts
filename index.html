@@ -48,14 +48,13 @@
     </div>
 
     <script>
+        var dur = 300;
         var el = document.querySelectorAll('#JSarray .square');
-        for(var x = 0; x<el.length; x++){
-            console.log("x positions", el[x].getBoundingClientRect().x);
-        }
         var arr = [];
         var nums = [5, 4, 3, 2, 1];
         for (var i = 0; i < el.length; i++) {
-            arr.push({ dom: el[i], val: nums[i], count: 0 })
+            el[i].count = 0;
+            arr.push({ dom: el[i], val: nums[i] })
         }
 
         // var singleEl = { val: 3, name: "el-00" }
@@ -65,11 +64,11 @@
                 targets: el[i],
                 height: {
                     value: "*=" + height,
-                    duration: 2000,
+                    duration: 200,
                     easing: "linear"
                 },
                 loop: false,
-                duration: 3000
+                duration: 300
             })
         }
         var time = anime.timeline();
@@ -87,7 +86,9 @@
                                 // { value: '#FFF' }, // Or #FFFFFF
                                 { value: 'rgb(0, 0, 255)' },
                                 { value: 'rgb(116, 237, 132)' }
-                            ]
+                            ],
+                            duration: dur
+
                         })
                     if (arr[i].val > arr[i + 1].val) {
                         time.add({
@@ -96,19 +97,25 @@
                                 // { value: '#FFF' }, // Or #FFFFFF
                                 { value: 'rgb(255, 0, 0)' },
                                 { value: 'rgb(116, 237, 132)' }
-                            ]
+                            ],
+                            duration: dur
                         })
-                        arr[i].count += 1;
-                        arr[i+1].count -= 1;
+                        arr[i].dom.count += 1;
+                        arr[i+1].dom.count -= 1;
                         time
                         .add({
-                            targets: arr[i].dom,
-                            translateX: 74 * arr[i].count
+                            targets: [arr[i].dom, arr[i+1].dom],
+                            translateX: function(el){
+                               return el.count * 74;
+                            },
+                            duration: dur
+
                         })
-                        .add({
-                            targets: arr[i+1].dom,
-                            translateX: 74 * arr[i+1].count
-                        })
+                        // .add({
+                        //     targets: arr[i+1].dom,
+                        //     translateX: 74 * arr[i+1].count,
+                        //     duration: dur
+                        // })
         
                         swapped = true;
                         aSwapOccurred = true;
